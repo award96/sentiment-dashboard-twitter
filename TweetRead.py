@@ -20,7 +20,7 @@ bearer_token = getenv('bearerToken')
 
 CA_SNOW_SEARCH = "lang:en -is:retweet (\"california snow\" OR \"cali snow\") february" # english language, no retweets, 
 UCLA_SEARCH = "lang:en -is:retweet ucla OR #ucla OR @ucla"
-RONALDO_SEARCH = "to:Cristiano lang:en"
+RONALDO_SEARCH = "to:Cristiano OR @Cristiano lang:en"
 VERIFIED_SEARCH = "is:verified lang:en"
 DEFAULT_STREAM_FILTERS = [CA_SNOW_SEARCH, 
                           UCLA_SEARCH,
@@ -77,11 +77,11 @@ def sendData(c_socket, stream_filter_list = DEFAULT_STREAM_FILTERS):
     # enforce new rules
     for stream_filter in stream_filter_list:
         twitter_stream.add_rules(tweepy.StreamRule(stream_filter))
-    
-    twitter_stream.filter()
+
     # check
     print(f"\nFiltering with the following rules {twitter_stream.get_rules()}\n")
-
+    twitter_stream.filter()
+    
 if __name__ == "__main__":
     s = socket.socket()         # Create a socket object
     host = "127.0.0.1"     # Get local machine name
