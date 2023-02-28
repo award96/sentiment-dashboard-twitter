@@ -18,7 +18,7 @@ access_token = getenv('accessToken')
 access_token_secret = getenv('accessTokenSecret')
 bearer_token = getenv('bearerToken')
 
-DEFAULT_SEARCH_TERMS = ['Jake Paul']
+DEFAULT_SEARCH_TERMS = ['California snow in February']
 
 class TweetsListener(StreamingClient):
     # https://www.youtube.com/watch?v=8r5en18DOZQ
