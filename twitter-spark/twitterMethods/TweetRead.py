@@ -9,6 +9,8 @@ import asyncio
 from tweepy import StreamingClient, OAuthHandler, API
 import socket
 import json
+import sys
+import traceback
 from os import getenv
 from dotenv import load_dotenv
 
@@ -19,6 +21,7 @@ access_token = getenv('accessToken')
 access_token_secret = getenv('accessTokenSecret')
 bearer_token = getenv('bearerToken')
 
+DEFAULT_HOST = "127.0.0.1"
 CA_SNOW_SEARCH = "lang:en -is:retweet (\"california snow\" OR \"cali snow\") february" # english language, no retweets, 
 UCLA_SEARCH = "lang:en -is:retweet ucla OR #ucla OR @ucla"
 RONALDO_SEARCH = "to:Cristiano OR @Cristiano lang:en"
@@ -65,7 +68,9 @@ class TweetsListener(StreamingClient):
 
 
 
-def sendData(c_socket, stream_filter_list = DEFAULT_STREAM_FILTERS):
+def sendData(
+        c_socket: str = DEFAULT_HOST, 
+        stream_filter_list: list[str] = DEFAULT_STREAM_FILTERS) -> None:
 
     twitter_stream = TweetsListener(
         bearer_token,
@@ -76,6 +81,7 @@ def sendData(c_socket, stream_filter_list = DEFAULT_STREAM_FILTERS):
     you can use all available operators, can submit up to 1,000 concurrent rules, 
     and can submit rules up to 1,024 characters long.
     """
+    print("Twitter Stream instantiated")
     # twitter api has persistent rules
     current_rules = twitter_stream.get_rules()
     to_delete = [x.id for x in current_rules.data]
@@ -87,26 +93,67 @@ def sendData(c_socket, stream_filter_list = DEFAULT_STREAM_FILTERS):
     # check
     print(f"\nFiltering with the following rules {twitter_stream.get_rules()}\n")
     twitter_stream.filter()
-    
-async def startTweetStream(
+
+# @asyncio.coroutine
+def startTweetStream(
         stream_filter_list: list[str] = DEFAULT_STREAM_FILTERS, 
         host: str="127.0.0.1", 
         port: int = 5554) -> None:
-    
-    s = socket.socket()
-    s.bind((host, port))
-    print("Listening on port: %s" % str(port))
-    s.listen(5)
-    s.listen(5)                 # Now wait for client connection.
-    c, addr = s.accept()        # Establish connection with client.
-    print( "Tweet Stream received request from: " + str( addr ) )
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((host, port))
+        print("Listening on port: %s" % str(port))
+        s.listen(5)
+        s.listen(5)                 # Now wait for client connection.
+        c, addr = s.accept()        # Establish connection with client.
+        print( "Tweet Stream received request from: " + str( addr ) )
 
-    sendData( c , stream_filter_list)
-    print("end of tweet stream function")
+        sendData( c , stream_filter_list)
+        print("end of tweet stream function")
+    except (KeyboardInterrupt, Exception):
+        print(traceback.format_exc())
+        print("\nShutting down socket")
+        s.shutdown(socket.SHUT_RDWR)
+        s.close()
+        sys.exit()
 
 def stopTweetStream():
     pass
     #sendData()
 
+async def startTweetServer(
+        host: str=DEFAULT_HOST, 
+        port: int = 5554) -> None:
+    print("\nStarting tweet server")
+    server = await asyncio.start_server(handle_client, host, port)
+    async with server:
+        print("Tweet server up")
+        await server.serve_forever()
+
+## PLEASE WORK
+# https://stackoverflow.com/questions/48506460/python-simple-socket-client-server-using-asyncio
+import asyncio, socket
+
+async def handle_client(reader, writer):
+    request = None
+    while request != 'quit':
+        request = (await reader.read(255)).decode('utf8')
+        response = str(eval(request)) + '\n'
+        writer.write(response.encode('utf8'))
+        await writer.drain()
+    writer.close()
+
+async def run_server():
+    server = await asyncio.start_server(handle_client, 'localhost', 15555)
+    async with server:
+        await server.serve_forever()
+
+#asyncio.run(run_server())
+
 if __name__ == "__main__":
+    # asyncio.run(startTweetServer())
+    # print("cmon man ")
+    # sendData()
+
     startTweetStream()

@@ -12,7 +12,11 @@ import warnings
 warnings.filterwarnings('ignore')
 warnings.simplefilter('ignore')
 
-async def startSpark():
+
+DEFAULT_HOST = "127.0.0.1"
+DEFAULT_PORT = 5554
+
+def startSpark(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
     print("building spark stream")
     # create a SparkSession
     spark = SparkSession.builder.appName("TwitterStreaming").getOrCreate()
@@ -23,7 +27,7 @@ async def startSpark():
     spark.sparkContext.setLogLevel("ERROR")
     print("connecting spark to socket")
     # create a DStream that reads data from port 5554
-    socket_stream = ssc.socketTextStream("127.0.0.1", 5554)
+    socket_stream = ssc.socketTextStream(host, port)
     lines = socket_stream.window(20)
 
     # define the schema for your DataFrame
@@ -47,8 +51,9 @@ async def startSpark():
     # start the context
     print("starting spark stream")
     ssc.start()
-    return ssc 
+    return sqlContext, ssc 
 
 def stopSpark(ssc):
+    print("\nShutting down spark socket stream")
     # Stop the SparkSession. MAKE SURE TO RUN THIS AFTER YOU ARE DONE!!
     ssc.stop()
