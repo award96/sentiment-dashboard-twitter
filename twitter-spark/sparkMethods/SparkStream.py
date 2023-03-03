@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings('ignore')
 warnings.simplefilter('ignore')
 
-def startSpark():
+async def startSpark():
     print("building spark stream")
     # create a SparkSession
     spark = SparkSession.builder.appName("TwitterStreaming").getOrCreate()

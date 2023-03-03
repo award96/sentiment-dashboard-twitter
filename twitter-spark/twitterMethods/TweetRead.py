@@ -5,6 +5,7 @@
 
 
 import tweepy
+import asyncio
 from tweepy import StreamingClient, OAuthHandler, API
 import socket
 import json
@@ -87,10 +88,10 @@ def sendData(c_socket, stream_filter_list = DEFAULT_STREAM_FILTERS):
     print(f"\nFiltering with the following rules {twitter_stream.get_rules()}\n")
     twitter_stream.filter()
     
-def startTweetStream(
+async def startTweetStream(
         stream_filter_list: list[str] = DEFAULT_STREAM_FILTERS, 
         host: str="127.0.0.1", 
-        port: int = 5554):
+        port: int = 5554) -> None:
     
     s = socket.socket()
     s.bind((host, port))
@@ -98,10 +99,10 @@ def startTweetStream(
     s.listen(5)
     s.listen(5)                 # Now wait for client connection.
     c, addr = s.accept()        # Establish connection with client.
-
-    print( "Received request from: " + str( addr ) )
+    print( "Tweet Stream received request from: " + str( addr ) )
 
     sendData( c , stream_filter_list)
+    print("end of tweet stream function")
 
 def stopTweetStream():
     pass
