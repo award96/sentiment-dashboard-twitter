@@ -41,7 +41,10 @@ class TweetsListener(StreamingClient):
             # tweet is not a reply 
             pass
 
-    def on_data(self, json_tweet):
+    def on_data(self, json_tweet, should_close_stream=False):
+        if should_close_stream is False:
+            return False
+        
         try:
             tweet = json.loads(json_tweet)
             data = tweet['data']
@@ -84,17 +87,25 @@ def sendData(c_socket, stream_filter_list = DEFAULT_STREAM_FILTERS):
     print(f"\nFiltering with the following rules {twitter_stream.get_rules()}\n")
     twitter_stream.filter()
     
-if __name__ == "__main__":
-    s = socket.socket()         # Create a socket object
-    host = "127.0.0.1"     # Get local machine name
-    port = 5554                 # Reserve a port for your service.
-    s.bind((host, port))        # Bind to the port
-
+def startTweetStream(
+        stream_filter_list: list[str] = DEFAULT_STREAM_FILTERS, 
+        host: str="127.0.0.1", 
+        port: int = 5554):
+    
+    s = socket.socket()
+    s.bind((host, port))
     print("Listening on port: %s" % str(port))
-
+    s.listen(5)
     s.listen(5)                 # Now wait for client connection.
     c, addr = s.accept()        # Establish connection with client.
 
     print( "Received request from: " + str( addr ) )
 
-    sendData( c )
+    sendData( c , stream_filter_list)
+
+def stopTweetStream():
+    pass
+    #sendData()
+
+if __name__ == "__main__":
+    startTweetStream()
