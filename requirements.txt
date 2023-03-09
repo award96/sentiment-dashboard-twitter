@@ -1,0 +1,8 @@
+pandas
+matplotlib
+pyspark
+vaderSentiment
+Flask
+textblob
+wordcloud
+IPython
