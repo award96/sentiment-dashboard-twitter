@@ -5,6 +5,7 @@ import json
 from os import getenv
 from dotenv import load_dotenv
 
+MAX_TWEETS = 24
 print("\n\ntwitter called\n")
 print(__file__)
 print(os.getcwd())
@@ -68,7 +69,7 @@ def delete_all_rules(rules):
 def set_rules(search_term: str):
     # You can adjust the rules if needed
     sample_rules = [
-        {f"value": "lang:en -is:retweet #{search_term}"},
+        {"value": f"lang:en -is:retweet #{search_term}"},
     ]
     payload = {"add": sample_rules}
     response = requests.post(
@@ -85,6 +86,7 @@ def set_rules(search_term: str):
 
 
 def get_stream():
+    tweet_count=0
     response = requests.get(
         "https://api.twitter.com/2/tweets/search/stream", auth=bearer_oauth, stream=True,
     )
@@ -98,17 +100,26 @@ def get_stream():
         )
     for response_line in response.iter_lines():
         if response_line:
-            json_response = json.loads(response_line)
-            res = json.dumps(json_response, indent=4, sort_keys=True)
-            print(res)
-            yield res
+            while tweet_count <= MAX_TWEETS:
+                tweet_count += 1
+                json_response = json.loads(response_line)
+                res = json.dumps(json_response, indent=4, sort_keys=True)
+                #print(res)
+                yield res
 
 
 def main(search_term: str = "Oscars"):
+    print("main")
     rules = get_rules()
     delete_all_rules(rules)
-    set_rules()
-    yield get_stream()
+    set_rules(search_term)
+    tc = 0
+    for tweet in get_stream():
+        tc+=1
+        if tc > MAX_TWEETS:
+            break
+        print(tweet)
+        yield tweet
 
 
 if __name__ == "__main__":

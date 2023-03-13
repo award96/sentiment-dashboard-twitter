@@ -57,7 +57,16 @@ def create_app(test_config=None):
     @app.route('/' + HOME_PAGE, methods=['GET', 'POST'])
     def post_query():
         query = request.form['query']
-        res = itertools.islice(stream.main(query), n_tweets)
+        res = []
+        t_count = 0
+        for tweet in stream.main(query):
+            #display tweet
+            res.append(tweet)
+            
+            t_count += 1
+            if t_count > n_tweets:
+                break
+            
         if res is None:
             return render_template("404.html")
         return render_template("results.html", data=res)
