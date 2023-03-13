@@ -22,10 +22,12 @@ CA_SNOW_SEARCH = "lang:en -is:retweet (\"california snow\" OR \"cali snow\") feb
 UCLA_SEARCH = "lang:en -is:retweet ucla OR #ucla OR @ucla"
 RONALDO_SEARCH = "to:Cristiano OR @Cristiano lang:en"
 VERIFIED_SEARCH = "is:verified lang:en"
-DEFAULT_STREAM_FILTERS = [CA_SNOW_SEARCH, 
-                          UCLA_SEARCH,
-                          RONALDO_SEARCH,
-                          VERIFIED_SEARCH]
+OSCARS_SEARCH = "lang:en -is:#Oscars"
+DEFAULT_STREAM_FILTERS = OSCARS_SEARCH
+# DEFAULT_STREAM_FILTERS = [CA_SNOW_SEARCH, 
+#                           UCLA_SEARCH,
+#                           RONALDO_SEARCH,
+#                           VERIFIED_SEARCH]
 
 class TweetsListener(StreamingClient):
     # https://www.youtube.com/watch?v=8r5en18DOZQ

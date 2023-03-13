@@ -1,0 +1,7 @@
+User inputs search term and tweet limit to landing page form
+--> Stream starts retrieving and storing tweets until the limit is met
+    --> During this period the user will be on a waiting page
+    --> (optional) Ideas for waiting page: Tweet Stream, progress bar/tweet count
+--> Once limit is reached, display sentiment analysis bargraph and word cloud
+    --> (optional) display different plots for each sentiment
+--> (optional) Button to reroute user to the landing page
