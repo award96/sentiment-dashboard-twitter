@@ -6,10 +6,6 @@ from os import getenv
 from dotenv import load_dotenv
 
 MAX_TWEETS = 24
-print("\n\ntwitter called\n")
-print(__file__)
-print(os.getcwd())
-print("\n")
 load_dotenv()
 
 # To set your enviornment variables in your terminal run the following line:
