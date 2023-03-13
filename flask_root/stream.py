@@ -5,6 +5,10 @@ import json
 from os import getenv
 from dotenv import load_dotenv
 
+print("\n\ntwitter called\n")
+print(__file__)
+print(os.getcwd())
+print("\n")
 load_dotenv()
 
 # To set your enviornment variables in your terminal run the following line:
@@ -17,6 +21,7 @@ bearer_token = getenv('bearerToken')
 
 
 def bearer_oauth(r):
+    print("bearer_oath")
     """
     Method required by bearer token authentication.
     """
@@ -34,6 +39,7 @@ def get_rules():
         raise Exception(
             "Cannot get rules (HTTP {}): {}".format(response.status_code, response.text)
         )
+    print("get_rules()")
     print(json.dumps(response.json()))
     return response.json()
 
@@ -55,13 +61,14 @@ def delete_all_rules(rules):
                 response.status_code, response.text
             )
         )
+    print("delete_all_rules")
     print(json.dumps(response.json()))
 
 
-def set_rules():
+def set_rules(search_term: str):
     # You can adjust the rules if needed
     sample_rules = [
-        {"value": "lang:en -is:retweet #Oscars"},
+        {f"value": "lang:en -is:retweet #{search_term}"},
     ]
     payload = {"add": sample_rules}
     response = requests.post(
@@ -73,6 +80,7 @@ def set_rules():
         raise Exception(
             "Cannot add rules (HTTP {}): {}".format(response.status_code, response.text)
         )
+    print("set_rules")
     print(json.dumps(response.json()))
 
 
@@ -80,6 +88,7 @@ def get_stream():
     response = requests.get(
         "https://api.twitter.com/2/tweets/search/stream", auth=bearer_oauth, stream=True,
     )
+    print("get_stream")
     print(response.status_code)
     if response.status_code != 200:
         raise Exception(
@@ -90,14 +99,16 @@ def get_stream():
     for response_line in response.iter_lines():
         if response_line:
             json_response = json.loads(response_line)
-            print(json.dumps(json_response, indent=4, sort_keys=True))
+            res = json.dumps(json_response, indent=4, sort_keys=True)
+            print(res)
+            yield res
 
 
-def main():
+def main(search_term: str = "Oscars"):
     rules = get_rules()
     delete_all_rules(rules)
     set_rules()
-    get_stream()
+    yield get_stream()
 
 
 if __name__ == "__main__":

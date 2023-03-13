@@ -6,8 +6,10 @@ https://flask.palletsprojects.com/en/2.2.x/tutorial/layout/
 
 import os
 from flask import Flask, redirect, url_for, render_template, request, jsonify
+import itertools
 # this is how you would import a submodule
-from flask_root.twitter import get_twitter_data
+from flask_root import stream
+n_tweets = 10
 HOME_PAGE = 'home'
 RESULTS_PAGE = 'results'
 
@@ -55,7 +57,7 @@ def create_app(test_config=None):
     @app.route('/' + HOME_PAGE, methods=['GET', 'POST'])
     def post_query():
         query = request.form['query']
-        res = get_twitter_data(query)
+        res = itertools.islice(stream.main(query), n_tweets)
         if res is None:
             return render_template("404.html")
         return render_template("results.html", data=res)
