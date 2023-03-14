@@ -11,7 +11,6 @@ body {
     margin:0;
     background-image: url(/static/background.jpg);
     background-position: -700px;
-
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -59,8 +58,8 @@ form>input[type=text] {
     transition: .2s;
 }
 
-form-field:focus {
-    border-color: #787878;
+form>input[type=text]:focus {
+    background-color: #e0e0e065;
 }
 
 form>input[type=submit] {
@@ -95,15 +94,15 @@ form>input[type=submit]:hover {
 }
 
 .a2 {
-    animation-delay: 2.1s;
-}
-
-.a3 {
     animation-delay: 2.2s;
 }
 
+.a3 {
+    animation-delay: 2.4s;
+}
+
 .a4 {
-    animation-delay: 2.3s;
+    animation-delay: 2.6s;
 }
 
 @keyframes move {
@@ -132,3 +131,11 @@ form>input[type=submit]:hover {
         width: 440px;
     }
 }
+
+@keyframes colorin {
+    0%   {background-color: rgba(223, 223, 223, 0);}
+    25%  {background-color: rgba(223, 223, 223, .25);}
+    50%  {background-color: rgba(223, 223, 223, .50);}
+    75%  {background-color: rgba(223, 223, 223, .75);}
+    100% {background-color: rgba(223, 223, 223, 1);}
+  }

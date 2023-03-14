@@ -2,3 +2,8 @@ Flask==2.2.3
 python-dotenv==1.0.0
 requests==2.27.1
 tweepy==4.12.1
+matplotlib==3.3.3
+pandas==1.1.4
+textblob==0.17.1
+wordcloud==1.8.2.2
+numpy==1.18.0
