@@ -53,11 +53,10 @@ schema = StructType([
  .map(lambda x: re.sub(r'#', '', x))
  .map(lambda x: re.sub(r'RT', '', x))
  .map(lambda x: re.sub(r':', '', x))
- .foreachRDD(lambda rdd: rdd.map(lambda x: (x,)).toDF(schema).limit(25).createOrReplaceTempView("tweets_table"))
+ .foreachRDD(lambda rdd: rdd.map(lambda x: (x,)).toDF(schema).limit(10).createOrReplaceTempView("tweets_table"))
 )
 
 ssc.start()
-time.sleep(5)
 
 # Define a Flask app
 app = Flask(__name__)
@@ -77,8 +76,8 @@ def video_feed():
 
         count = 0
         prev_sentiment_percentages = pd.Series([0,0,0,0], index=['[-1.0, -0.5]', '(-0.5, 0.0]', '(0.0, 0.5]', '(0.5, 1.0]'])
-        while count < 2:
-            latest_25 = sqlContext.sql('SELECT * FROM tweets_table LIMIT 25')
+        while count < 5:
+            latest_25 = sqlContext.sql('SELECT * FROM tweets_table LIMIT 10')
             sent_df = latest_25.toPandas()
 
             # apply the function to your dataframe to get sentiment for each sentence
@@ -105,7 +104,6 @@ def video_feed():
             plt.title('Percentage of Sentences per Sentiment for Latest 100 tweets')
             plt.savefig('PLOT.png')
             plt.show()
-            time.sleep(5)
             count += 1
 
 
