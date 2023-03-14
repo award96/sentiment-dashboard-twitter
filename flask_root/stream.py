@@ -61,7 +61,7 @@ def delete_all_rules(rules):
 def set_rules(search_term: str = "Oscars"):
     # You can adjust the rules if needed
     sample_rules = [
-        {"value": f"lang:en -is:retweet #{search_term}"},
+        {"value": f"lang:en -is:retweet -is:quote -is:reply #{search_term} OR {search_term}", "tag": search_term},
     ]
     payload = {"add": sample_rules}
     response = requests.post(
