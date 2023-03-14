@@ -1,0 +1,134 @@
+body {
+    font-family: Arial;
+    padding:0;
+    margin:0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    padding:0;
+    margin:0;
+    background-image: url(/static/background.jpg);
+    background-position: -700px;
+
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.left {
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    animation-name: left;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-delay: 1s;
+    align-items: center;
+    background-color: whitesmoke;
+}
+
+
+.header>h1 {
+    margin: 0;
+    color: #1da1f2;
+}
+
+.header>h4 {
+    margin-top: 10px;
+    font-weight: normal;
+    font-size: 15px;
+    color: #919191;
+}
+
+form {
+    margin-top: 25px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+form>input[type=text] {
+    height: 45px;
+    padding: 0 16px;
+    border: 1px solid;
+    outline: 0;
+    transition: .2s;
+}
+
+form-field:focus {
+    border-color: #787878;
+}
+
+form>input[type=submit] {
+    color: white;
+    margin-top: 20px;
+    background: #1da1f2;
+    height: 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 900;
+    transition: 0.5s;
+    border: None;
+}
+
+form>input[type=submit]:hover {
+    color: white;
+    background: #1477b5;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+
+.animation {
+    animation-name: move;
+    animation-duration: .4s;
+    animation-fill-mode: both;
+    animation-delay: 1s;
+}
+
+.a1 {
+    animation-delay: 2s;
+}
+
+.a2 {
+    animation-delay: 2.1s;
+}
+
+.a3 {
+    animation-delay: 2.2s;
+}
+
+.a4 {
+    animation-delay: 2.3s;
+}
+
+@keyframes move {
+    0% {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-40px);
+    }
+
+    100% {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+@keyframes left {
+    0% {
+        opacity: 0;
+        width: 0;
+    }
+
+    100% {
+        opacity: 1;
+        padding: 20px 40px;
+        width: 440px;
+    }
+}

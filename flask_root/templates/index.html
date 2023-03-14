@@ -1,7 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+</head>
 <body>
-    <form method="POST">
-        <label for="query_input">What Topic on Twitter?</label>
-        <input type="text" id="query_input" name="query">
-        <input type="submit">
-    </form>
+<div class="container">
+    <div class="left">
+      <div class="header">
+        <h1 class="animation a1">Twitter Sentiments</h1>
+        <h4 class="animation a2">See how Twitter is feeling about anything</h4>
+      </div>
+      <form method="POST">
+        <input type="text" id="query_input" name="query" class="form-field animation a3" placeholder="Hashtag to search for:">
+        <input type="submit" class="animation a4">
+      </form>
+    </div>
+    <div class="right"></div>
+  </div>
+</div>
 </body>
+</html>
