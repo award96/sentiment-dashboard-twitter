@@ -26,7 +26,7 @@ n_tweets = 10
 HOME_PAGE = 'home'
 RESULTS_PAGE = 'results'
 custom_stopwords = STOPWORDS
-stop_words = ['RT', 'co', 't', 'https'] + list(STOPWORDS)
+stop_words = ['RT', 'co', 't', 'https', 'la', 'de'] + list(STOPWORDS)
 
 def get_sentiment(text):
     blob = TextBlob(text)
@@ -35,7 +35,8 @@ def get_sentiment(text):
 def get_plots(data, search_term):
     # data input is a list of dictionaries
     sent_df = pd.DataFrame.from_dict(data)
-    
+    sent_df['text'].str.replace('@\w+', '', regex=True)
+
     # apply the function to your dataframe to get sentiment for each sentence
     sent_df['sentiment'] = sent_df['text'].apply(get_sentiment)
 
@@ -44,7 +45,7 @@ def get_plots(data, search_term):
     sentiment_counts = sent_df.groupby(bins)['sentiment'].count()
 
     # calculate percentage of sentences in each sentiment range
-    sentiment_percentages = sentiment_counts / len(sent_df) * 100
+    sentiment_percentages = (sentiment_counts / len(sent_df) * 100).to_list()
 
     
     # plot the results with custom labels for each range
@@ -73,9 +74,23 @@ def get_plots(data, search_term):
     wordcloud = WordCloud(width=450, height=450, background_color='white', max_words=50, 
                           mask=twitter_logo, colormap='magma', stopwords = stop_words + search_term.split(' '),
                           contour_width=2, contour_color='#1477b5').generate_from_text(' '.join(sent_df['text']))
+    ax2.set_title('Word Cloud')
+    ax2.xaxis.set_tick_params(labelbottom=False)
+    ax2.yaxis.set_tick_params(labelleft=False)
+    ax2.set_xticks([])
+    ax2.set_yticks([])
     ax2.imshow(wordcloud)
 
     return fig, fig2
+
+def get_img_string(image):
+    buf = BytesIO()
+    FigureCanvas(image).print_png(buf)
+    
+    # Encode PNG image to base64 string
+    b64str = "data:image/png;base64,"
+    b64str += base64.b64encode(buf.getvalue()).decode('utf8')
+    return b64str
 
 def create_app(test_config=None):
     # create and configure the app
@@ -136,18 +151,11 @@ def create_app(test_config=None):
             return render_template("404.html")
         
         sentiment, wordcloud = get_plots(res, query)
-        buf = BytesIO()
-        FigureCanvas(sentiment).print_png(buf)
-    
-        # Encode PNG image to base64 string
-        sentimentB64String = "data:image/png;base64,"
-        sentimentB64String += base64.b64encode(buf.getvalue()).decode('utf8')
+        
+        sentimentB64String = get_img_string(sentiment)
+        wordcloudB64String = get_img_string(wordcloud)
 
-        buf2 = BytesIO()
-        FigureCanvas(wordcloud).print_png(buf2)
-        wordcloudB64String = "data:image/png;base64,"
-        wordcloudB64String += base64.b64encode(buf2.getvalue()).decode('utf8')
-        return render_template("results.html", sentiment=sentimentB64String, wordcloud = wordcloudB64String)
+        return render_template("results.html", sentiment=sentimentB64String, wordcloud = wordcloudB64String, term = query)
 
     @app.route('/' + RESULTS_PAGE)
     def display_query_res():

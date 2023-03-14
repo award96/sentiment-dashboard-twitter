@@ -1,8 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/results_style.css') }}">
+</head>
 <body>
-    <p>
-        <img src="{{ sentiment }}" alt="Chart" height="450px" width="auto">
-    </p>
-    <p>
-        <img src="{{ wordcloud }}" alt="Chart" height="450px" width="auto">
-    </p>
-</body>
+<div class="container">
+    <div class = "left">
+        <div class="header">
+            <h3 class="animation a1">Your search term,</h3>
+            <h1 class="animation a2">{{term}}</h1>
+            <h3 class="animation a3">Generated the following results:</h3>
+        </div>
+    </div>
+    <div class = "middle">
+        <img src="{{ sentiment }}" alt="Chart" height="auto" width="auto">
+    </div>
+    <div class = "right">
+        <img src="{{ wordcloud }}" alt="Chart" height="auto" width="auto">
+    </div>
+</div>
