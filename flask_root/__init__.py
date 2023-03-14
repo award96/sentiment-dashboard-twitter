@@ -44,7 +44,7 @@ def get_plots(data, search_term):
     sentiment_counts = sent_df.groupby(bins)['sentiment'].count()
 
     # calculate percentage of sentences in each sentiment range
-    sentiment_percentages = sentiment_counts / len(sent_df) * 100
+    sentiment_percentages = (sentiment_counts / len(sent_df) * 100).to_list()
 
     
     # plot the results with custom labels for each range
