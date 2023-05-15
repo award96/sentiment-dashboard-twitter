@@ -7,4 +7,4 @@ Visualize twitter user sentiment with real-time data on any input topic.
 3. Sentiment analysis is performed and visualized
 
 ## Demo
-![](https://github.com/sentiment-dashboard-twitter/sentiment-dashboard-demo.gif)
+![](sentiment-dashboard-demo.gif)
