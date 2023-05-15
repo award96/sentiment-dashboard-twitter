@@ -1,9 +1,10 @@
 # sentiment-dashboard-twitter
 
+## Purpose
+Visualize twitter user sentiment with real-time data on any input topic.
+1. You write in the topic
+2. The twitter API pulls the most recent tweets with the topic in the text
+3. Sentiment analysis is performed and visualized
 
-## How to Run the Flask app
-In a terminal window, be in the same directory as this README and do the following:
-1. python3 -m venv venv
-2. . venv/bin/activate (. venv/Scripts/activate on windows)
-3. pip install -r requirements.txt
-4. flask --app flask_root run --debug
+## Demo
+![](https://github.com/sentiment-dashboard-twitter/sentiment-dashboard-demo.gif)
